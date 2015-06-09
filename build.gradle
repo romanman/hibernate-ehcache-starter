@@ -1,0 +1,46 @@
+ext {
+    gradleVersion = '1.9'
+    hibernateVersion = '4.3.10.Final'
+    javaLanguageLevel = '1.7'
+}
+
+subprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'java'
+
+    group = 'org.hibernate.brmeyer.demo'
+    version = rootProject.hibernateVersion
+
+    targetCompatibility = rootProject.javaLanguageLevel
+	sourceCompatibility = rootProject.javaLanguageLevel
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+		compile( 'org.hibernate:hibernate-core:' + rootProject.hibernateVersion )
+		compile( 'org.hibernate:hibernate-entitymanager:' + rootProject.hibernateVersion )
+
+        compile( 'ch.qos.logback:logback-classic:1.1.3')
+        compile( 'ch.qos.logback:logback-core:1.1.3')
+        compile( 'org.slf4j:slf4j-api:1.7.12')
+
+        runtime( 'com.h2database:h2:1.4.187' )
+	}
+
+	tasks.withType( JavaCompile.class ).all { task->
+		task.options.compilerArgs += [
+				"-nowarn",
+				"-proc:none",
+				"-encoding", "UTF-8",
+				"-source", rootProject.javaLanguageLevel,
+				"-target", rootProject.javaLanguageLevel
+		]
+	}
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = gradleVersion
+}
